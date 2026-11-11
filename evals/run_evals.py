@@ -33,7 +33,7 @@ def run_case(case, args):
 
 def main():
     parser = argparse.ArgumentParser(description='Chạy agent và chấm eval 0–100')
-    choices = ['openai', 'gemini', 'anthropic', 'openrouter']
+    choices = ['openai', 'gemini', 'anthropic', 'openrouter', 'groq']
     parser.add_argument('--provider', choices=choices, default=os.getenv('PROVIDER', 'openai'))
     parser.add_argument('--model', default=os.getenv('MODEL'))
     parser.add_argument('--judge-provider', choices=choices, default=os.getenv('JUDGE_PROVIDER'))
@@ -60,6 +60,7 @@ def main():
         print(f"Đang chạy {case['id']}", flush=True)
         item = run_case(case, args)
         print(f"{case['id']}: {item['grade'].get('score')} ({item['grade']['status']})", flush=True)
+        import time; time.sleep(1.0)
         return item
     with ThreadPoolExecutor(max_workers=args.workers) as pool:
         results = list(pool.map(run_and_print, selected))
